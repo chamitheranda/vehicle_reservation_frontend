@@ -5,8 +5,12 @@ import './App.css'
 const App = () => {
   return (
     <div className='App'>
-        <Nav />
-        <Form />
+        <div>
+          <Nav />
+        </div>
+        <div>
+          <Form />
+        </div>
     </div>
   )
 }
