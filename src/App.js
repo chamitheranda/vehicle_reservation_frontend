@@ -1,11 +1,11 @@
 import React from 'react'
+import { Form , Nav } from './components'
 
 const App = () => {
   return (
-    <div>
-      <h1>
-        Hello Front end 
-      </h1>
+    <div className='App'>
+        <Nav />
+        <Form />
     </div>
   )
 }
