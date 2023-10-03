@@ -1,9 +1,13 @@
 import React from 'react';
+import { useAuth0 } from '@auth0/auth0-react'; // Import useAuth0 hook
 import './nav.css';
 
 const Nav = () => {
+  const { loginWithRedirect } = useAuth0(); // Get the loginWithRedirect function
+
   const handleSignInClick = () => {
-    window.location.href = 'http://localhost:8080/swagger-ui.html';
+    // Use loginWithRedirect to initiate the login process and redirect to Auth0 login page
+    loginWithRedirect();
   };
 
   return (
