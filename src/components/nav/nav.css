@@ -58,3 +58,30 @@
     color: black;
     font-size: 22px;
 }
+
+
+.reservation{
+    margin-top: 10px;
+    margin-left: 30%;
+    background-color: black;
+    color: white;
+    padding: 10px 20px;
+    margin-left: 36%;
+    border: 3px solid #4de669;
+    border-radius: 5px;
+    font-size: 20px;
+    text-align: center;
+    transition: background-color 0.3s ease-in-out;
+    cursor: pointer;
+    width: 500px;
+    border-radius: 500px;
+    height: 50px;
+    margin-bottom: 100px;
+
+}
+.reservation:hover {
+    background-color: white;
+    box-shadow: 3px 5px 5px rgba(0, 0, 0, 0.2);
+    color: black;
+    font-size: 22px;
+}
