@@ -45,14 +45,15 @@ const Auth0AppContent = () => {
 
   if (isLoading) {
     // You can optionally show a loading indicator while Auth0 is checking authentication.
-    return <div>Loading...</div>;
+    return <div className='loading'>Loading...</div>;
   }
 
   return (
     <div>
-      {isAuthenticated ? <Form jwt={jwt} /> : <Nav />}
+      {isAuthenticated ? <Form jwtToken={jwt} /> : <Nav />}
     </div>
   );
+  
 }
 
 export default App;
