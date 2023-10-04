@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Form, Nav } from './components';
 import './App.css';
 import { Auth0Provider, useAuth0 } from '@auth0/auth0-react';
+import { BrowserRouter as Router, Route, Routes, Navigate } from 'react-router-dom'; // Import Routes and Navigate
 
 const App = () => {
   return (
@@ -10,11 +11,13 @@ const App = () => {
       clientId="Vh7JFCAyC1Omz6oDdyrpmcItVen9F8g9"
       redirectUri={window.location.origin}
     >
-      <div className='App'>
-        <div>
-          <Auth0AppContent />
+      <Router>
+        <div className='App'>
+          <div>
+            <Auth0AppContent />
+          </div>
         </div>
-      </div>
+      </Router>
     </Auth0Provider>
   );
 }
@@ -49,11 +52,11 @@ const Auth0AppContent = () => {
   }
 
   return (
-    <div>
-      {isAuthenticated ? <Form jwtToken={jwt} /> : <Nav />}
-    </div>
+    <Routes> {/* Use Routes instead of Switch */}
+      <Route path="/form" element={isAuthenticated ? <Form jwtToken={jwt} /> : <Navigate to="/" />} />
+      <Route path="/" element={isAuthenticated ? <Form jwtToken={jwt} /> : <Nav />} />
+    </Routes>
   );
-  
 }
 
 export default App;
