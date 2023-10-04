@@ -1,17 +1,19 @@
 import './form.css'
 import React, { useState } from 'react';
+import axios from 'axios';
 
-function ServiceReservationForm() {
+function Form(props) {
+  const { jwtToken } = props;
   const [formData, setFormData] = useState({
     username: '',
     reservationDate: '',
-    preferredTime: '10 AM',
+    preferredTime: '10',
     preferredLocation: '',
     vehicleRegistrationNumber: '',
     currentMileage: '',
     message: '',
   });
-
+  
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setFormData({
@@ -20,10 +22,35 @@ function ServiceReservationForm() {
     });
   };
 
-  const handleSubmit = (e) => {
+  // const handleSubmit = (e) => {
+  //   e.preventDefault();
+  //   console.log(formData);
+  // };
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log(formData);
+
+    try {
+      const response = await axios.post(
+        'http://localhost:8083/api/v1/customer/make-reservation',
+        formData, // Send formData as the request body
+        {
+          headers: {
+            Authorization: `Bearer ${jwtToken}`, // Include the JWT token in headers
+            'Content-Type': 'application/json',
+          },
+        }
+      );
+
+      console.log('Server Response:', response.data);
+    } catch (error) {
+      console.error('Error:', error);
+    }
   };
+
+
+  /////////////////////////////
+
 
   const getCurrentDate = () => {
     const today = new Date();
@@ -71,9 +98,9 @@ function ServiceReservationForm() {
             value={formData.preferredTime}
             onChange={handleInputChange}
           >
-            <option value="10 AM">10 AM</option>
-            <option value="11 AM">11 AM</option>
-            <option value="12 PM">12 PM</option>
+            <option value="10">10 AM</option>
+            <option value="11">11 AM</option>
+            <option value="12">12 PM</option>
           </select>
         </div>
         <div className="form-group">
@@ -148,4 +175,4 @@ function ServiceReservationForm() {
   );
 }
 
-export default ServiceReservationForm;
+export default Form;
