@@ -5,6 +5,10 @@
     scroll-behavior: smooth;
 }
 
+.loading{
+  visibility: visible;
+}
+
 body{
     background: var(--color-bg)
 }
