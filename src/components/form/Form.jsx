@@ -1,42 +1,78 @@
 import './form.css'
-import React, { useState } from 'react';
+import React, { useEffect ,useState } from 'react';
 import axios from 'axios';
+import { useAuthContext } from '@asgardeo/auth-react'; // Import Asgardeo authentication components
+
 
 function Form(props) {
-  const { jwtToken } = props;
+  const { jwtToken , idToken } = props;
   const [formData, setFormData] = useState({
-    username: '',
     reservationDate: '',
     preferredTime: '10',
-    preferredLocation: '',
     vehicleRegistrationNumber: '',
+    preferredLocation: 'Galle',
     currentMileage: '',
     message: '',
   });
-  
+
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setFormData({
       ...formData,
       [name]: value,
     });
+    
   };
 
-  // const handleSubmit = (e) => {
-  //   e.preventDefault();
-  //   console.log(formData);
-  // };
+const fetchUserDetails = async () => {
+  try {
+    const response = await axios.get('https://api.asgardeo.io/t/orgueejs/oauth2/userinfo', {
+      headers: {
+        Authorization: `Bearer ${jwtToken}`, // Replace with your actual access token
+      },
+    });
 
+    const userDetails = response.data;
+    const email = userDetails.email;
+    const name = userDetails.name;
+    const number = userDetails.phone_number;
+    
+
+    console.log('User Details:', userDetails);
+
+    if (userDetails) {
+      console.log('data = ',userDetails.email)
+      setFormData({
+        ...formData,
+        userName: name,
+        email : email ,
+        number : number,
+      });
+    } else {
+      console.warn('Mobile property not found in user details');
+    }
+  }catch(error) {
+    console.error('Error fetching user details:', error);
+    console.log('Response Data:', error.response.data);
+  }
+};
+
+useEffect(() => {
+    fetchUserDetails();
+}, [idToken, jwtToken]);
+ 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
     try {
       const response = await axios.post(
-        'http://localhost:8083/api/v1/customer/make-reservation',
-        formData, // Send formData as the request body
+        'http://localhost:8080/api/v1/customer/make-reservation',
+        {
+          ...formData 
+        },
         {
           headers: {
-            Authorization: `Bearer ${jwtToken}`, // Include the JWT token in headers
+            Authorization: `Bearer ${jwtToken}`,
             'Content-Type': 'application/json',
           },
         }
@@ -68,17 +104,7 @@ function Form(props) {
     <div className="service-reservation-form">
       <h2>Vehicle Service Reservation</h2>
       <form onSubmit={handleSubmit}>
-        <div className="form-group">
-          <label htmlFor="username">Username (Obtained from IDP):</label>
-          <input
-            type="text"
-            id="username"
-            name="username"
-            value={formData.username}
-            onChange={handleInputChange}
-            required
-          />
-        </div>
+        
         <div className="form-group">
           <label htmlFor="reservationDate">Date of Service Reservation:</label>
           <input
@@ -102,6 +128,18 @@ function Form(props) {
             <option value="11">11 AM</option>
             <option value="12">12 PM</option>
           </select>
+        </div>
+       
+        <div className="form-group">
+          <label htmlFor="vehicleRegistrationNumber">Vehicle Registration Number:</label>
+          <input
+            type="text"
+            id="vehicleRegistrationNumber"
+            name="vehicleRegistrationNumber"
+            value={formData.vehicleRegistrationNumber}
+            onChange={handleInputChange}
+            required
+          />
         </div>
         <div className="form-group">
           <label htmlFor="preferredLocation">Preferred Location:</label>
@@ -137,17 +175,6 @@ function Form(props) {
             <option value="Ratnapura">Ratnapura</option>
             <option value="Kegalle">Kegalle</option>
           </select>
-        </div>
-        <div className="form-group">
-          <label htmlFor="vehicleRegistrationNumber">Vehicle Registration Number:</label>
-          <input
-            type="text"
-            id="vehicleRegistrationNumber"
-            name="vehicleRegistrationNumber"
-            value={formData.vehicleRegistrationNumber}
-            onChange={handleInputChange}
-            required
-          />
         </div>
         <div className="form-group">
           <label htmlFor="currentMileage">Current Mileage:</label>
