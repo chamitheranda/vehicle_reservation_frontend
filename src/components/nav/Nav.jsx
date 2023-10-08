@@ -1,37 +1,49 @@
 import React from 'react';
-import { useAuth0 } from '@auth0/auth0-react';
+import { useAuthContext } from '@asgardeo/auth-react'; // Import Asgardeo hook
 import './nav.css';
+import { Link } from 'react-router-dom'; // Import Link from react-router-dom
+
+
 
 const Nav = () => {
-  const { loginWithRedirect, logout, isAuthenticated } = useAuth0();
+  const { signIn, signOut, state } = useAuthContext(); 
 
   const handleSignInClick = () => {
-    loginWithRedirect();
+    if(state.isAuthenticated){
+      alert("You are already logged in !!!")
+    } else{
+      signIn();
+    }  
   };
 
   const handleSignUpClick = () => {
-    // Check if the user is authenticated before logging out
-    if (isAuthenticated) {
-      logout({ returnTo: window.location.origin });
+    if (state.isAuthenticated) {
+      if (window.confirm('Are you sure you want to log out?')) {
+        document.cookie = 'jwt=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';
+        signOut();
+      }
     } else {
-      // Handle sign-up logic here if the user is not authenticated
-      // For example, you can redirect the user to a sign-up page.
     }
   };
+
 
   return (
     <div className='nav_bar'>
       <p className='welcome_msg'>Welcome To Vehiclo!!</p>
       <div className='buttons'>
-        <div>
-          <button onClick={() => { /* Handle reservation logic here */ }} className='reservation'>Make Reservation</button>
-        </div>
+        if(state.isAuthenticated){
+          <Link to='/form' className='reservation'>
+          Make Reservation
+          </Link>
+        }else{
+          alert("Please SignIn or Register !!")
+        }
         <div>
           <button onClick={handleSignInClick} className='login_button'>Sign in</button>
         </div>
         <div>
           <button onClick={handleSignUpClick} className='signup_button'>
-            {isAuthenticated ? 'Sign Out' : 'Sign Up'}
+            {state.isAuthenticated ? 'Sign Out' : 'Sign Up'}
           </button>
         </div>
       </div>
@@ -40,3 +52,4 @@ const Nav = () => {
 };
 
 export default Nav;
+
