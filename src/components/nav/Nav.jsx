@@ -1,11 +1,11 @@
 import React from 'react';
 import { useAuthContext } from '@asgardeo/auth-react'; // Import Asgardeo hook
 import './nav.css';
-import { Link } from 'react-router-dom'; // Import Link from react-router-dom
 
 
 
-const Nav = () => {
+const Nav = (props) => {
+  const {toggleForm} = props
   const { signIn, signOut, state } = useAuthContext(); 
 
   const handleSignInClick = () => {
@@ -31,13 +31,17 @@ const Nav = () => {
     <div className='nav_bar'>
       <p className='welcome_msg'>Welcome To Vehiclo!!</p>
       <div className='buttons'>
-        if(state.isAuthenticated){
+        {/* if(state.isAuthenticated){
           <Link to='/form' className='reservation'>
           Make Reservation
           </Link>
         }else{
           alert("Please SignIn or Register !!")
-        }
+        } */}
+        
+        <div>
+          <button onClick={toggleForm} className='login_button'>Make Reservation</button>
+        </div>
         <div>
           <button onClick={handleSignInClick} className='login_button'>Sign in</button>
         </div>
