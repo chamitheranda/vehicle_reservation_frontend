@@ -1,60 +1,84 @@
 import React, { useState, useEffect } from 'react';
-import { Form, Nav } from './components';
+import { Form, Nav } from './components'; // Import your Form and Nav components
 import './App.css';
-import { Auth0Provider, useAuth0 } from '@auth0/auth0-react';
-import { BrowserRouter as Router, Route, Routes, Navigate } from 'react-router-dom'; // Import Routes and Navigate
+import { AuthProvider, useAuthContext } from '@asgardeo/auth-react'; // Import Asgardeo authentication components
+import Cookies from 'js-cookie';
+import jwt_decode from 'jwt-decode';
+import { BrowserRouter as Router, Route, Routes, Navigate } from 'react-router-dom';
 
 const App = () => {
   return (
-    <Auth0Provider
-      domain="dev-m8vl5qthokuutecv.us.auth0.com"
-      clientId="Vh7JFCAyC1Omz6oDdyrpmcItVen9F8g9"
-      redirectUri={window.location.origin}
+    <AuthProvider
+      config={{
+        clientID: "1QtNSlVCszLaL2701bpo9S_f_sIa", // Replace with your Asgardeo clientID
+        baseUrl: "https://api.asgardeo.io/t/orgueejs", // Replace with your Asgardeo baseUrl
+        signInRedirectURL: window.location.origin,
+        signOutRedirectURL: window.location.origin,
+        scope: ["openid", "profile"]
+      }}
     >
       <Router>
         <div className='App'>
           <div>
-            <Auth0AppContent />
+            <AsgardeoAppContent />
           </div>
         </div>
       </Router>
-    </Auth0Provider>
+    </AuthProvider>
   );
 }
 
-const Auth0AppContent = () => {
-  const { isAuthenticated, isLoading, getAccessTokenSilently, loginWithRedirect, logout } = useAuth0();
-  const [jwt, setJwt] = useState(null);
+const AsgardeoAppContent = () => {
+  const { state, getAccessToken, getIDToken, signOut } = useAuthContext(); 
+  const [jwtToken, setJwtToken] = useState(null);
+  const [idToken, setIdToken] = useState(null);
 
   useEffect(() => {
-    if (isAuthenticated) {
-      getAccessToken();
-    }
-  }, [isAuthenticated]);
+    const checkTokenExpiration = () => {
+      const jwtToken = Cookies.get('jwtToken');
+      const idToken = Cookies.get('idToken');
 
-  const getAccessToken = async () => {
-    try {
-      const accessToken = await getAccessTokenSilently();
-      setJwt(accessToken); // Store the JWT token in state
-    } catch (error) {
-      if (error.error === 'login_required') {
-        // The user needs to log in again
-        loginWithRedirect();
-      } else {
-        console.error('Error obtaining access token:', error);
+      if (jwtToken && idToken) {
+        const decodedToken = jwt_decode(jwtToken);
+        const currentTime = Date.now() / 1000;
+
+        if (decodedToken.exp < currentTime) {
+          Cookies.remove('jwtToken');
+          Cookies.remove('idToken');
+          setJwtToken(null);
+          setIdToken(null);
+        }
       }
+    };
+
+    if (state.isAuthenticated) {
+      getAccessToken().then((accessToken) => {
+        getIDToken().then((idToken) => {
+          Cookies.set('jwtToken', accessToken, { expires: new Date(idToken.exp * 1000) });
+          Cookies.set('idToken', idToken, { expires: new Date(idToken.exp * 1000) });
+          setJwtToken(accessToken);
+          setIdToken(idToken);
+          checkTokenExpiration();
+        });
+      });
     }
+  }, [state.isAuthenticated, getAccessToken, getIDToken]);
+
+  const handleLogout = () => {
+    Cookies.remove('jwtToken');
+    Cookies.remove('idToken');
   };
 
-  if (isLoading) {
-    // You can optionally show a loading indicator while Auth0 is checking authentication.
-    return <div className='loading'>Loading...</div>;
-  }
-
   return (
-    <Routes> {/* Use Routes instead of Switch */}
-      <Route path="/form" element={isAuthenticated ? <Form jwtToken={jwt} /> : <Navigate to="/" />} />
-      <Route path="/" element={isAuthenticated ? <Form jwtToken={jwt} /> : <Nav />} />
+    <Routes>
+      <Route
+        path="/form"
+        element={state.isAuthenticated ? <Form jwtToken={jwtToken} idToken={idToken} /> : <Navigate to="/" />}
+      />
+      <Route
+        path="/"
+        element={state.isAuthenticated ? <Nav />: <Nav onLogout={handleLogout} />}
+      />
     </Routes>
   );
 }
