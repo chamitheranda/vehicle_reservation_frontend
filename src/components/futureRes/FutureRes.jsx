@@ -33,12 +33,35 @@ const FutureRes = (props) => {
       });
   }, [jwtToken, email]);
 
-  const handleDelete = (reservationId) => {
-    // Implement the logic to delete a reservation based on its ID
-    // You can make another axios request or use your preferred method here
-    // After deleting, you can update the state to reflect the changes
+  const handleDelete = (reservation) => {
+    const confirmDelete = window.confirm(`Are you sure you want to delete the reservation for vehicle ${reservation.vehicleNo}?`);
+    
+    if (confirmDelete) {
+      axios
+        .delete(`http://localhost:8080/api/v1/customer/delete-future-reservation`, {
+          params: {
+            vehicleNo: reservation.vehicleNo,
+          },
+          headers: {
+            Authorization: `Bearer ${jwtToken}`,
+          },
+        })
+        .then((response) => {
+          alert('Reservation deleted successfully');
+          setReservations((prevReservations) =>
+            prevReservations.filter((r) => r.vehicleNo !== reservation.vehicleNo)
+          );
+        })
+        .catch((error) => {
+          console.error('Error deleting reservation:', error);
+          console.log("jwt token", jwtToken)
+          console.log("vehicle no",reservation.vehicleNo)
+          alert('Error deleting reservation');
+        });
+    }
   };
-
+  
+  
   return (
     <div className="reservation-list">
       {isLoading ? (
@@ -65,7 +88,7 @@ const FutureRes = (props) => {
                   <td>
                     <button
                       className="delete-button"
-                      onClick={() => handleDelete(reservation.id)}
+                      onClick={() => handleDelete(reservation)}
                     >
                       Delete
                     </button>
