@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Form, Nav , NavBar , Dashboard , ReservationList} from './components'; // Import your Form and Nav components
+import { Form, Nav , NavBar , Dashboard , ReservationList , FutureRes} from './components'; // Import your Form and Nav components
 import './App.css';
 import { AuthProvider, useAuthContext } from '@asgardeo/auth-react'; // Import Asgardeo authentication components
 import Cookies from 'js-cookie';
@@ -61,14 +61,26 @@ const AsgardeoAppContent = () => {
   const toggleForm = () =>{
     setShowNav(showForm);
     setShowRes(showForm);
+    setShowFutureRes(showForm);
     setShowForm(!showForm);
     setShowDash(!showForm);
     
   }
 
+
+  const [showFutureRes , setShowFutureRes] = useState(false)  
+  const toggleFutureRes = () =>{
+    setShowNav(showFutureRes);
+    setShowForm(showFutureRes);
+    setShowRes(showFutureRes);
+    setShowDash(!showFutureRes);
+    setShowFutureRes(!showFutureRes);
+  }
+
   const[showRes , setShowRes] = useState(false);
   const toggleRes = () =>{
     setShowNav(showRes);
+    setShowFutureRes(showRes);
     setShowForm(showRes);
     setShowRes(!showRes);
     setShowDash(!showRes);
@@ -80,7 +92,8 @@ const AsgardeoAppContent = () => {
     if(!showNav){
       setShowDash(showNav);
       setShowForm(showNav);
-      setShowRes(showNav)
+      setShowRes(showNav);
+      setShowFutureRes(showNav);
     }
     setShowNav(!showNav);
     
@@ -91,7 +104,8 @@ const AsgardeoAppContent = () => {
     if(!showDash){
       setShowNav(showDash);
       setShowForm(showDash);
-      setShowRes(showDash)
+      setShowRes(showDash);
+      setShowFutureRes(showDash);
     }
     setShowDash(!showDash);
     
@@ -156,8 +170,12 @@ const AsgardeoAppContent = () => {
             ):
             showRes ?(
               <ReservationList jwtToken={jwtToken} idToken={idToken} userDetails={userDetails}  />
-            ) : (
-              <Dashboard toggleDash={toggleDash} toggleForm={toggleForm} toggleRes = {toggleRes}/>
+            ) :
+            showFutureRes ? (
+              <FutureRes jwtToken={jwtToken} idToken={idToken} userDetails={userDetails} />
+            ):
+            (
+              <Dashboard toggleDash={toggleDash} toggleForm={toggleForm} toggleRes = {toggleRes} toggleFutureRes={toggleFutureRes}  />
             )
           ) : (
             <Nav />
