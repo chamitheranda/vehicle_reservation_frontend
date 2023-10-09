@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Form, Nav , NavBar } from './components'; // Import your Form and Nav components
+import { Form, Nav , NavBar , Dashboard } from './components'; // Import your Form and Nav components
 import './App.css';
 import { AuthProvider, useAuthContext } from '@asgardeo/auth-react'; // Import Asgardeo authentication components
 import Cookies from 'js-cookie';
@@ -38,6 +38,26 @@ const AsgardeoAppContent = () => {
   const[showForm , setShowForm] = useState(false);
   const toggleForm = () =>{
     setShowForm(!showForm);
+    setShowDash(!showForm);
+    setShowNav(showForm);
+  }
+
+  const[showNav , setShowNav] = useState(false);
+  const toggleNav = () =>{
+    setShowNav(!showNav);
+    if(showNav){
+      setShowDash(!showNav);
+      setShowForm(!showNav);
+    }
+  }
+
+  const[showDash , setShowDash] = useState(false);
+  const toggleDash = () =>{
+    setShowDash(!showDash);
+    if(showDash){
+      setShowNav(!showDash);
+      setShowForm(!showDash);
+    }
   }
 
 
@@ -81,26 +101,36 @@ const AsgardeoAppContent = () => {
     Cookies.remove('idToken');
   };
 
+  useEffect(() => {
+    // This effect runs whenever 'state.isAuthenticated', 'showForm', or 'showNav' changes
+  }, [state.isAuthenticated, showDash, showNav , showForm]);
+  
   return (
-    // <Routes>
-    //   <Route
-    //     path="/form"
-    //     element={state.isAuthenticated ? <Form jwtToken={jwtToken} idToken={idToken} /> : <Navigate to="/" />}
-    //   />
-    //   <Route
-    //     path="/"
-    //     element={state.isAuthenticated ? <Nav />: <Nav onLogout={handleLogout} />}
-    //   />
-    // </Routes>
     <>
-    <div>
-      <NavBar />
-    </div>
-    <div>
-      {state.isAuthenticated && toggleForm ? (<Form jwtToken={jwtToken} idToken={idToken}   />) : (<Nav toggleForm={toggleForm}/>)}
-    </div>
+      <div>
+        <NavBar toggleNav={toggleNav} toggleDash={toggleDash} />
+      </div>
+      <div>
+        {state.isAuthenticated ? (
+          showDash ? (
+            showForm ? (
+              <Form jwtToken={jwtToken} idToken={idToken} />
+            ) : (
+              <Dashboard toggleDash={toggleDash} toggleForm={toggleForm} />
+            )
+          ) : (
+            <Nav />
+          )
+        ) : (
+          <Nav />
+        )}
+      </div>
     </>
   );
+  
+  
+  
+  
 }
 
 export default App;
