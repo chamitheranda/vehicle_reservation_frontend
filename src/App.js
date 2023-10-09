@@ -30,9 +30,6 @@ const App = () => {
   
 }
 
-
-
-
 const AsgardeoAppContent = () => {
 
   const[showForm , setShowForm] = useState(false);
@@ -44,20 +41,22 @@ const AsgardeoAppContent = () => {
 
   const[showNav , setShowNav] = useState(false);
   const toggleNav = () =>{
-    setShowNav(!showNav);
-    if(showNav){
-      setShowDash(!showNav);
-      setShowForm(!showNav);
+    if(!showNav){
+      setShowDash(showNav);
+      setShowForm(showNav);
     }
+    setShowNav(!showNav);
+    
   }
 
   const[showDash , setShowDash] = useState(false);
   const toggleDash = () =>{
-    setShowDash(!showDash);
-    if(showDash){
-      setShowNav(!showDash);
-      setShowForm(!showDash);
+    if(!showDash){
+      setShowNav(showDash);
+      setShowForm(showDash);
     }
+    setShowDash(!showDash);
+    
   }
 
 
