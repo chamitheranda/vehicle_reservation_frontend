@@ -3,24 +3,27 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import './navBar.css';
 
-function NavBar() {
+function NavBar(props) {
+
+    const {toggleNav , toggleDash} = props;
   return (
     <nav className="navbar">
       <div className="company-name">Vehiclo</div>
       <ul className="nav-list">
         <li className="nav-item">
-          <Link to="/">Home</Link>
+            <button onClick={toggleNav}>Home</button>
         </li>
         <li className="nav-item">
-          <Link to="/dashboard">Dashboard</Link>
+            <button onClick={toggleDash}>Dashboard</button>
         </li>
         <li className="nav-item">
-          <Link to="/contact">Contact Us</Link>
+            <button onClick="">Contact Us</button>
         </li>
         <li className="nav-item">
-          <Link to="/about">About Us</Link>
+            <button onClick="">About Us</button>
         </li>
-      </ul>
+</ul>
+
     </nav>
   );
 }
