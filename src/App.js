@@ -1,10 +1,12 @@
 import React, { useState, useEffect } from 'react';
-import { Form, Nav , NavBar , Dashboard } from './components'; // Import your Form and Nav components
+import { Form, Nav , NavBar , Dashboard , ReservationList} from './components'; // Import your Form and Nav components
 import './App.css';
 import { AuthProvider, useAuthContext } from '@asgardeo/auth-react'; // Import Asgardeo authentication components
 import Cookies from 'js-cookie';
 import jwt_decode from 'jwt-decode';
 import { BrowserRouter as Router, Route, Routes, Navigate } from 'react-router-dom';
+import axios from 'axios';
+
 
 
 const App = () => {
@@ -32,11 +34,45 @@ const App = () => {
 
 const AsgardeoAppContent = () => {
 
+  const [userDetails , setUserDetails] = useState(null);
+
+    const fetchUserDetails = async (jwtToken) => {
+      try {
+        const response = await axios.get('https://api.asgardeo.io/t/orgueejs/oauth2/userinfo', {
+          headers: {
+            Authorization: `Bearer ${jwtToken}`, // Replace with your actual access token
+          },
+        });
+
+        const userDetails = response.data;
+        setUserDetails(userDetails);
+      } catch (error) {
+        console.error('Error fetching user details:', error);
+        console.log('Response Data:', error.response.data);
+      }
+    };
+
+    // Call the fetchUserDetails function when the component is mounted
+   
+
+  
+
   const[showForm , setShowForm] = useState(false);
   const toggleForm = () =>{
+    setShowNav(showForm);
+    setShowRes(showForm);
     setShowForm(!showForm);
     setShowDash(!showForm);
-    setShowNav(showForm);
+    
+  }
+
+  const[showRes , setShowRes] = useState(false);
+  const toggleRes = () =>{
+    setShowNav(showRes);
+    setShowForm(showRes);
+    setShowRes(!showRes);
+    setShowDash(!showRes);
+    
   }
 
   const[showNav , setShowNav] = useState(false);
@@ -44,6 +80,7 @@ const AsgardeoAppContent = () => {
     if(!showNav){
       setShowDash(showNav);
       setShowForm(showNav);
+      setShowRes(showNav)
     }
     setShowNav(!showNav);
     
@@ -54,6 +91,7 @@ const AsgardeoAppContent = () => {
     if(!showDash){
       setShowNav(showDash);
       setShowForm(showDash);
+      setShowRes(showDash)
     }
     setShowDash(!showDash);
     
@@ -70,6 +108,7 @@ const AsgardeoAppContent = () => {
       const idToken = Cookies.get('idToken');
 
       if (jwtToken && idToken) {
+        fetchUserDetails(jwtToken);
         const decodedToken = jwt_decode(jwtToken);
         const currentTime = Date.now() / 1000;
 
@@ -102,20 +141,23 @@ const AsgardeoAppContent = () => {
 
   useEffect(() => {
     // This effect runs whenever 'state.isAuthenticated', 'showForm', or 'showNav' changes
-  }, [state.isAuthenticated, showDash, showNav , showForm]);
+  }, [state.isAuthenticated, showDash, showNav , showForm , showRes]);
   
   return (
     <>
       <div>
-        <NavBar toggleNav={toggleNav} toggleDash={toggleDash} />
+        <NavBar toggleNav={toggleNav} toggleDash={toggleDash}  />
       </div>
       <div>
         {state.isAuthenticated ? (
           showDash ? (
             showForm ? (
               <Form jwtToken={jwtToken} idToken={idToken} />
+            ):
+            showRes ?(
+              <ReservationList jwtToken={jwtToken} idToken={idToken} userDetails={userDetails}  />
             ) : (
-              <Dashboard toggleDash={toggleDash} toggleForm={toggleForm} />
+              <Dashboard toggleDash={toggleDash} toggleForm={toggleForm} toggleRes = {toggleRes}/>
             )
           ) : (
             <Nav />
@@ -125,11 +167,7 @@ const AsgardeoAppContent = () => {
         )}
       </div>
     </>
-  );
-  
-  
-  
-  
+  );  
 }
 
 export default App;
