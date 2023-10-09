@@ -1,0 +1,45 @@
+/* futureRes.css */
+.reservation-list {
+    font-family: Arial, sans-serif;
+    padding: 20px;
+    color: white;
+  }
+  
+  h1 {
+    font-size: 24px;
+    margin-bottom: 20px;
+  }
+  
+  table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+  
+  th, td {
+    text-align: left;
+    padding: 8px;
+    width: 20%;
+    text-align: center;
+  }
+  
+  th {
+    background-color: #333;
+    color: white;
+  }
+  
+  tr:nth-child(even) {
+    background-color: #f2f2f2;
+  }
+  
+  .delete-button {
+    background-color: #f44336;
+    color: white;
+    border: none;
+    padding: 8px 16px;
+    cursor: pointer;
+  }
+  
+  .delete-button:hover {
+    background-color: #d32f2f;
+  }
+  
