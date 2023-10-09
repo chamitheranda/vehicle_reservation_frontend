@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Form, Nav , NavBar , Dashboard , ReservationList , FutureRes} from './components'; // Import your Form and Nav components
+import { Form, Nav , NavBar , Dashboard , ReservationList , FutureRes , Footer} from './components'; // Import your Form and Nav components
 import './App.css';
 import { AuthProvider, useAuthContext } from '@asgardeo/auth-react'; // Import Asgardeo authentication components
 import Cookies from 'js-cookie';
@@ -183,6 +183,9 @@ const AsgardeoAppContent = () => {
         ) : (
           <Nav />
         )}
+      </div>
+      <div>
+        <Footer />
       </div>
     </>
   );  
