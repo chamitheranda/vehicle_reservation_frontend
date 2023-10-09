@@ -103,8 +103,7 @@ useEffect(() => {
   return (
     <div className="service-reservation-form">
       <h2>Vehicle Service Reservation</h2>
-      <form onSubmit={handleSubmit}>
-        
+      <form onSubmit={handleSubmit}>       
         <div className="form-group">
           <label htmlFor="reservationDate">Date of Service Reservation:</label>
           <input

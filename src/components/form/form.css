@@ -1,10 +1,11 @@
 .service-reservation-form {
+    padding-top: 200px;
     max-width: 700px;
     margin: 0 auto;
     padding: 20px;
-    border: 1px solid #ccc;
+    border: 1px solid #2d0a0a;
     border-radius: 5px;
-    background-color: #f9f9f9;
+    background-color: #192431;
   }
   
   .form-group {
@@ -29,14 +30,29 @@
   
   button[type="submit"] {
     background-color: #007bff;
-    color: #fff;
+    color: white;
     padding: 10px 20px;
     border: none;
     border-radius: 4px;
     cursor: pointer;
   }
+
+  h2{
+    color: white;
+    padding-bottom: 60px;
+  }
+
+  label{
+    color:white;
+    padding-bottom: 10px;
+  }
   
   button[type="submit"]:hover {
     background-color: #0056b3;
   }
-  
+
+  input:hover,
+  select:hover{
+    cursor: pointer;
+  }
+ 

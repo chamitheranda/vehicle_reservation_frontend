@@ -5,7 +5,7 @@ import './navBar.css';
 
 function NavBar(props) {
 
-    const {toggleNav , toggleDash} = props;
+    const {toggleNav , toggleDash } = props;
   return (
     <nav className="navbar">
       <div className="company-name">Vehiclo</div>
