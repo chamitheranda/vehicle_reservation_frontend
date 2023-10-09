@@ -31,17 +31,7 @@ const Nav = (props) => {
     <div className='nav_bar'>
       <p className='welcome_msg'>Welcome To Vehiclo!!</p>
       <div className='buttons'>
-        {/* if(state.isAuthenticated){
-          <Link to='/form' className='reservation'>
-          Make Reservation
-          </Link>
-        }else{
-          alert("Please SignIn or Register !!")
-        } */}
-        
-        <div>
-          <button onClick={toggleForm} className='login_button'>Make Reservation</button>
-        </div>
+       
         <div>
           <button onClick={handleSignInClick} className='login_button'>Sign in</button>
         </div>
