@@ -5,7 +5,7 @@ import { useAuthContext } from '@asgardeo/auth-react'; // Import Asgardeo authen
 
 
 function Form(props) {
-  const { jwtToken , idToken } = props;
+  const { jwtToken , idToken ,userDetails } = props;
   const [formData, setFormData] = useState({
     reservationDate: '',
     preferredTime: '10',
@@ -25,36 +25,17 @@ function Form(props) {
   };
 
 const fetchUserDetails = async () => {
-  try {
-    const response = await axios.get('https://api.asgardeo.io/t/orgueejs/oauth2/userinfo', {
-      headers: {
-        Authorization: `Bearer ${jwtToken}`, // Replace with your actual access token
-      },
-    });
 
-    const userDetails = response.data;
-    const email = userDetails.email;
-    const name = userDetails.name;
-    const number = userDetails.phone_number;
-    
+const email = userDetails.email;
+const name = userDetails.name;
+const number = userDetails.phone_number;
 
-    console.log('User Details:', userDetails);
-
-    if (userDetails) {
-      console.log('data = ',userDetails.email)
-      setFormData({
-        ...formData,
-        userName: name,
-        email : email ,
-        number : number,
-      });
-    } else {
-      console.warn('Mobile property not found in user details');
-    }
-  }catch(error) {
-    console.error('Error fetching user details:', error);
-    console.log('Response Data:', error.response.data);
-  }
+setFormData({
+  ...formData,
+  userName: name,
+  email : email ,
+  number : number,
+});
 };
 
 useEffect(() => {
