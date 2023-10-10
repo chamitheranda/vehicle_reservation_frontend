@@ -1,11 +1,10 @@
-import './form.css'
-import React, { useEffect ,useState } from 'react';
+import './form.css';
+import React, { useEffect, useState } from 'react';
 import axios from 'axios';
-import { useAuthContext } from '@asgardeo/auth-react'; // Import Asgardeo authentication components
 
 
 function Form(props) {
-  const { jwtToken , idToken ,userDetails } = props;
+  const { jwtToken, idToken, userDetails } = props;
   const [formData, setFormData] = useState({
     reservationDate: '',
     preferredTime: '10',
@@ -15,42 +14,60 @@ function Form(props) {
     message: '',
   });
 
+  const [errors, setErrors] = useState({});
+
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setFormData({
       ...formData,
       [name]: value,
     });
-    
   };
 
-const fetchUserDetails = async () => {
+  const fetchUserDetails = async () => {
+    const email = userDetails.email;
+    const name = userDetails.name;
+    const number = userDetails.phone_number;
 
-const email = userDetails.email;
-const name = userDetails.name;
-const number = userDetails.phone_number;
+    setFormData({
+      ...formData,
+      userName: name,
+      email: email,
+      number: number,
+    });
+  };
 
-setFormData({
-  ...formData,
-  userName: name,
-  email : email ,
-  number : number,
-});
-};
-
-useEffect(() => {
+  useEffect(() => {
     fetchUserDetails();
-}, [idToken, jwtToken]);
- 
+  }, [idToken, jwtToken]);
+
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    // Perform form validation
+    const newErrors = {};
+
+    if (!formData.reservationDate) {
+      newErrors.reservationDate = 'Date is required.';
+    }
+    if (!formData.vehicleRegistrationNumber) {
+      newErrors.vehicleRegistrationNumber = 'Vehicle Registration Number is required.';
+    }
+    if (!formData.currentMileage) {
+      newErrors.currentMileage = 'Current Mileage is required.';
+    }
+
+    setErrors(newErrors);
+
+    // If there are errors, return without submitting the form
+    if (Object.keys(newErrors).length > 0) {
+      return;
+    }
 
     try {
       const response = await axios.post(
         'http://localhost:8080/api/v1/customer/make-reservation',
-        {
-          ...formData 
-        },
+        { ...formData },
         {
           headers: {
             Authorization: `Bearer ${jwtToken}`,
@@ -59,15 +76,17 @@ useEffect(() => {
         }
       );
 
+      if(response.status === 201){
+       alert("Reservation sucess !!") 
+      }else{
+        alert('Reservation failed!');
+      }
+
       console.log('Server Response:', response.data);
     } catch (error) {
       console.error('Error:', error);
     }
   };
-
-
-  /////////////////////////////
-
 
   const getCurrentDate = () => {
     const today = new Date();
@@ -84,7 +103,7 @@ useEffect(() => {
   return (
     <div className="service-reservation-form">
       <h2>Vehicle Service Reservation</h2>
-      <form onSubmit={handleSubmit}>       
+      <form onSubmit={handleSubmit}>
         <div className="form-group">
           <label htmlFor="reservationDate">Date of Service Reservation:</label>
           <input
@@ -93,9 +112,12 @@ useEffect(() => {
             name="reservationDate"
             min={getCurrentDate()}
             onChange={handleInputChange}
+            value={formData.reservationDate}
             required
           />
+          {errors.reservationDate && <span className="error">{errors.reservationDate}</span>}
         </div>
+
         <div className="form-group">
           <label htmlFor="preferredTime">Preferred Time:</label>
           <select
@@ -109,7 +131,7 @@ useEffect(() => {
             <option value="12">12 PM</option>
           </select>
         </div>
-       
+
         <div className="form-group">
           <label htmlFor="vehicleRegistrationNumber">Vehicle Registration Number:</label>
           <input
@@ -120,7 +142,11 @@ useEffect(() => {
             onChange={handleInputChange}
             required
           />
+          {errors.vehicleRegistrationNumber && (
+            <span className="error">{errors.vehicleRegistrationNumber}</span>
+          )}
         </div>
+
         <div className="form-group">
           <label htmlFor="preferredLocation">Preferred Location:</label>
           <select
@@ -129,7 +155,7 @@ useEffect(() => {
             value={formData.preferredLocation}
             onChange={handleInputChange}
           >
-            <option value="Colombo">Colombo</option>
+           <option value="Colombo">Colombo</option>
             <option value="Gampaha">Gampaha</option>
             <option value="Kalutara">Kalutara</option>
             <option value="Kandy">Kandy</option>
@@ -153,9 +179,10 @@ useEffect(() => {
             <option value="Badulla">Badulla</option>
             <option value="Monaragala">Monaragala</option>
             <option value="Ratnapura">Ratnapura</option>
-            <option value="Kegalle">Kegalle</option>
+            <option value="Kegalle">Kegalle</option>  
           </select>
         </div>
+
         <div className="form-group">
           <label htmlFor="currentMileage">Current Mileage:</label>
           <input
@@ -166,7 +193,9 @@ useEffect(() => {
             onChange={handleInputChange}
             required
           />
+          {errors.currentMileage && <span className="error">{errors.currentMileage}</span>}
         </div>
+
         <div className="form-group">
           <label htmlFor="message">Message:</label>
           <textarea
@@ -176,6 +205,7 @@ useEffect(() => {
             onChange={handleInputChange}
           ></textarea>
         </div>
+
         <button type="submit">Submit</button>
       </form>
     </div>
