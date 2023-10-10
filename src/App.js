@@ -175,7 +175,7 @@ const AsgardeoAppContent = () => {
         }
       }
     } else {
-      console.log("Please sign in");
+      alert("Please SignIn or Register");
     }
   };
 
