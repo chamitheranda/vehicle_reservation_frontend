@@ -1,20 +1,50 @@
 .welcome_msg{
   color: #da2929;
-  margin-top: 200px;
+  margin-top: 100px;
   margin-left: 32%;
   font-size: 70px;
 }
 
 .buttons{
-    margin-top: 150px;
+    margin-left: 300px;
+    padding-top: 100px;
 }
+
+.logo{
+    visibility: visible;
+    height: 300px;
+    width: 300px;
+    margin-left: 200px;
+}
+
+.logo-cont{
+    margin-top: 100px;
+}
+.contain{
+    display: flex;
+    flex-direction: row;
+    margin-top: 20px;
+}
+.cont1{
+    display: flex;
+    flex-direction: column;
+}
+.cont1 p {
+    color: rgb(217, 225, 58);
+    padding-left: 300px;
+    padding-top: 50px;
+    padding-right: 300px;
+    font-size: 25px;
+    font-style: italic;
+}
+
 .signup_button,
 .login_button{
-    margin-left: 30%;
+    margin-top: 10px;
+    padding-top: 0px;
     background-color: black;
     color: white;
     padding: 10px 20px;
-    margin-left: 36%;
     border: 3px solid #4de669;
     border-radius: 5px;
     font-size: 20px;
@@ -24,7 +54,6 @@
     width: 500px;
     border-radius: 500px;
     height: 50px;
-    margin-top: 10px;
 }
 
 .signup_button:hover,
@@ -36,25 +65,6 @@
     cursor: pointer;
 }
 
-/* .signup_button{
-    margin-top: 10px;
-    margin-left: 30%;
-    background-color: black;
-    color: white;
-    padding: 10px 20px;
-    margin-left: 36%;
-    border: 3px solid #4de669;
-    border-radius: 5px;
-    font-size: 20px;
-    text-align: center;
-    transition: background-color 0.3s ease-in-out;
-    cursor: pointer;
-    width: 500px;
-    border-radius: 500px;
-    height: 50px;
-    margin-bottom: 100px;
-
-} */
 .signup_button:hover {
     background-color: white;
     box-shadow: 3px 5px 5px rgba(0, 0, 0, 0.2);
