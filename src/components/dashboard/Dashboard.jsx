@@ -1,12 +1,13 @@
-// Dashboard.jsx
 import React from 'react';
 import './dashboard.css';
 
 function Dashboard(props) {
-  const {toggleForm , idToken , jwtToken , toggleRes , toggleFutureRes} = props;
+  const { toggleForm, idToken, jwtToken, toggleRes, toggleFutureRes, userDetails } = props;
+  const name = userDetails.name;
+  console.log("name",name)
   return (
     <div className="dashboard">
-      <header className="dashboard-header">Welcome!</header>
+      <p className="dashboard-header">Welcome , {name}!</p>
       <div className="dashboard-buttons">
         <button className="dashboard-button" onClick={toggleForm}>Make Reservation</button>
         <button className="dashboard-button" onClick={toggleRes}>View All Reservations</button>
