@@ -1,11 +1,10 @@
-// NavBar.jsx
 import React from 'react';
 import { Link } from 'react-router-dom';
 import './navBar.css';
 
 function NavBar(props) {
 
-    const {toggleNav , toggleDash } = props;
+    const {toggleNav , toggleDash , togglePro} = props;
   return (
     <nav className="navbar">
       <div className="company-name">Vehiclo</div>
@@ -17,10 +16,10 @@ function NavBar(props) {
             <button onClick={toggleDash}>Dashboard</button>
         </li>
         <li className="nav-item">
-            <button onClick="">Contact Us</button>
+            <button onClick={togglePro}>Profile</button>
         </li>
         <li className="nav-item">
-            <button onClick="">About Us</button>
+            <button>Contact</button>
         </li>
 </ul>
 
