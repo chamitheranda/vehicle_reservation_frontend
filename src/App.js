@@ -4,7 +4,7 @@ import './App.css';
 import { AuthProvider, useAuthContext } from '@asgardeo/auth-react'; 
 import Cookies from 'js-cookie';
 import jwt_decode from 'jwt-decode';
-import { BrowserRouter as Router, Route, Routes, Navigate } from 'react-router-dom';
+import { BrowserRouter as Router} from 'react-router-dom';
 import axios from 'axios';
 
 
@@ -126,7 +126,7 @@ const AsgardeoAppContent = () => {
   }
 
 
-  const { state, getAccessToken, getIDToken, signOut } = useAuthContext(); 
+  const { state, getAccessToken, getIDToken, signOut ,signIn} = useAuthContext(); 
   const [jwtToken, setJwtToken] = useState(null);
   const [idToken, setIdToken] = useState(null);
 
@@ -149,6 +149,7 @@ const AsgardeoAppContent = () => {
       }
     };
 
+  
     if (state.isAuthenticated) {
       getAccessToken().then((accessToken) => {
         getIDToken().then((idToken) => {
@@ -162,9 +163,28 @@ const AsgardeoAppContent = () => {
     }
   }, [state.isAuthenticated, getAccessToken, getIDToken]);
 
-  const handleLogout = () => {
-    Cookies.remove('jwtToken');
-    Cookies.remove('idToken');
+
+  const handleSignOutClick = () => {
+    if (state.isAuthenticated) {
+      if (window.confirm('Are you sure you want to log out?')) {
+        Cookies.remove('jwtToken');
+        Cookies.remove('idToken');
+        
+        if (typeof signOut === 'function') {
+          signOut();
+        }
+      }
+    } else {
+      console.log("Please sign in");
+    }
+  };
+
+  const handleSignInClick = () => {
+    if(state.isAuthenticated){
+      alert("You are already logged in !!!")
+    } else{
+      signIn();
+    }  
   };
 
   useEffect(() => {
@@ -195,10 +215,10 @@ const AsgardeoAppContent = () => {
               <Profile userDetails={userDetails}/>
           )
           : (
-            <Nav />
+            <Nav handleSignOutClick ={handleSignOutClick} handleSignInClick={handleSignInClick} />
           )
         ) : (
-          <Nav />
+          <Nav handleSignOutClick={handleSignOutClick} handleSignInClick = {handleSignInClick} />
         )}
       </div>
       <div>
