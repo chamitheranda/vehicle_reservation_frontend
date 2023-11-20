@@ -26,6 +26,7 @@
     "case-sensitive-paths-webpack-plugin": "2.3.0",
     "css-loader": "3.4.2",
     "date-fns": "^2.30.0",
+    "dompurify": "^3.0.6",
     "dotenv": "8.2.0",
     "dotenv-expand": "5.1.0",
     "eslint-loader": "3.0.3",

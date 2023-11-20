@@ -1,7 +1,25 @@
 import './form.css';
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
+import DOMPurify from 'dompurify';
 
+const validateFormData = (formData) => {
+  const errors = {};
+
+  // Your validation logic here
+  // Example: Check if required fields are filled
+  if (!formData.reservationDate) {
+    errors.reservationDate = 'Date is required.';
+  }
+  if (!formData.vehicleRegistrationNumber) {
+    errors.vehicleRegistrationNumber = 'Vehicle Registration Number is required.';
+  }
+  if (!formData.currentMileage) {
+    errors.currentMileage = 'Current Mileage is required.';
+  }
+
+  return errors;
+};
 
 function Form(props) {
   const { jwtToken, idToken, userDetails } = props;
@@ -18,10 +36,22 @@ function Form(props) {
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
+    const sanitizedValue = DOMPurify.sanitize(value);
+
     setFormData({
       ...formData,
-      [name]: value,
+      [name]: sanitizedValue,
     });
+  };
+
+  const handleTextareaChange = (e) => {
+    const { name, value } = e.target;
+    const sanitizedValue = DOMPurify.sanitize(value);
+
+    setFormData((prevData) => ({
+      ...prevData,
+      [name]: sanitizedValue,
+    }));
   };
 
   const fetchUserDetails = async () => {
@@ -45,18 +75,7 @@ function Form(props) {
     e.preventDefault();
 
     // Perform form validation
-    const newErrors = {};
-
-    if (!formData.reservationDate) {
-      newErrors.reservationDate = 'Date is required.';
-    }
-    if (!formData.vehicleRegistrationNumber) {
-      newErrors.vehicleRegistrationNumber = 'Vehicle Registration Number is required.';
-    }
-    if (!formData.currentMileage) {
-      newErrors.currentMileage = 'Current Mileage is required.';
-    }
-
+    const newErrors = validateFormData(formData);
     setErrors(newErrors);
 
     // If there are errors, return without submitting the form
@@ -76,9 +95,9 @@ function Form(props) {
         }
       );
 
-      if(response.status === 201){
-       alert("Reservation sucess !!") 
-      }else{
+      if (response.status === 201) {
+        alert('Reservation success !!');
+      } else {
         alert('Reservation failed!');
       }
 
@@ -155,7 +174,7 @@ function Form(props) {
             value={formData.preferredLocation}
             onChange={handleInputChange}
           >
-           <option value="Colombo">Colombo</option>
+            <option value="Colombo">Colombo</option>
             <option value="Gampaha">Gampaha</option>
             <option value="Kalutara">Kalutara</option>
             <option value="Kandy">Kandy</option>
@@ -179,7 +198,7 @@ function Form(props) {
             <option value="Badulla">Badulla</option>
             <option value="Monaragala">Monaragala</option>
             <option value="Ratnapura">Ratnapura</option>
-            <option value="Kegalle">Kegalle</option>  
+            <option value="Kegalle">Kegalle</option>
           </select>
         </div>
 
@@ -202,7 +221,7 @@ function Form(props) {
             id="message"
             name="message"
             value={formData.message}
-            onChange={handleInputChange}
+            onChange={handleTextareaChange}
           ></textarea>
         </div>
 

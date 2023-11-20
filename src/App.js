@@ -13,8 +13,8 @@ const App = () => {
   return (
     <AuthProvider
       config={{
-        clientID: "1QtNSlVCszLaL2701bpo9S_f_sIa", 
-        baseUrl: "https://api.asgardeo.io/t/orgueejs", 
+        clientID: //put your client id, 
+        baseUrl: // put your baseURL, 
         signInRedirectURL: window.location.origin,
         signOutRedirectURL: window.location.origin,
         scope: ["openid", "profile"]
@@ -74,7 +74,6 @@ const AsgardeoAppContent = () => {
     setShowProfile(showForm);
     setShowForm(!showForm);
     setShowDash(!showForm);
-    
   }
 
 
@@ -153,8 +152,14 @@ const AsgardeoAppContent = () => {
     if (state.isAuthenticated) {
       getAccessToken().then((accessToken) => {
         getIDToken().then((idToken) => {
-          Cookies.set('jwtToken', accessToken, { expires: new Date(idToken.exp * 1000) });
-          Cookies.set('idToken', idToken, { expires: new Date(idToken.exp * 1000) });
+          Cookies.set('jwtToken', accessToken, {
+            expires: new Date(idToken.exp * 1000),
+            httpOnly: true  
+          });
+          Cookies.set('idToken', idToken, { 
+            expires: new Date(idToken.exp * 1000) , 
+            httpOnly=true 
+          });
           setJwtToken(accessToken);
           setIdToken(idToken);
           checkTokenExpiration();
