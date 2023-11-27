@@ -11,8 +11,8 @@ const App = () => {
   return (
     <AuthProvider
       config={{
-        clientID: '1QtNSlVCszLaL2701bpo9S_f_sIa',
-        baseUrl: 'https://api.asgardeo.io/t/orgueejs',
+        clientID: //replace your clientID
+        baseUrl: //replace your baseUrl
         signInRedirectURL: window.location.origin,
         signOutRedirectURL: window.location.origin,
         scope: ['openid', 'profile'],
