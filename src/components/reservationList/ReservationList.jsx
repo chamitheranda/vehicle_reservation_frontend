@@ -1,16 +1,16 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import './reservationList.css';
-import { format } from 'date-fns'; // Import the date-fns library for date formatting
+import { format } from 'date-fns'; 
 
 const ReservationList = (props) => {
   const { jwtToken, idToken, userDetails , csrfToken } = props;
   const [reservations, setReservations] = useState([]);
-  const [isLoading, setIsLoading] = useState(true); // State to track loading status
+  const [isLoading, setIsLoading] = useState(true); 
   const email = userDetails.email;
 
   useEffect(() => {
-    setIsLoading(true); // Set loading to true when fetching data
+    setIsLoading(true); 
     axios
       .get('http://localhost:8080/api/v1/customer/get-all-reservation', {
         params: {
@@ -21,20 +21,20 @@ const ReservationList = (props) => {
         },
       })
       .then((response) => {
-        setReservations(response.data.data); // Set reservations state with response.data
-        setIsLoading(false); // Set loading to false after data is fetched
+        setReservations(response.data.data); 
+        setIsLoading(false); 
       })
       .catch((error) => {
         console.log('jwt token', jwtToken);
         console.log('user email', email);
         console.error('Error fetching reservation data:', error);
-        setIsLoading(false); // Set loading to false in case of an error
+        setIsLoading(false); 
       });
   }, [jwtToken, email]);
 
   return (
     <div className="reservation-list">
-      {isLoading ? ( // Show loading message while data is being fetched
+      {isLoading ? (
         <p>Loading...</p>
       ) : (
         <table>
@@ -49,8 +49,7 @@ const ReservationList = (props) => {
           <tbody>
             {Array.isArray(reservations) && reservations.length > 0 ? (
               reservations.map((reservation, index) => (
-                <tr className="reservation" key={index}>
-                  {/* Format the date and time */}
+                <tr className="reservation" key={index}>                  
                   <td>{format(new Date(reservation.date), 'dd-MM-yy')}</td>
                   <td>{reservation.time}</td>
                   <td>{reservation.vehicleNo}</td>

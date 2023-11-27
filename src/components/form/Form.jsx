@@ -110,10 +110,6 @@ function Form(props) {
         alert('Reservation failed!');
       }
       
-
-      
-
-      console.log('Server Response:', response.data);
     } catch (error) {
       console.error('Error:', error);
     }
