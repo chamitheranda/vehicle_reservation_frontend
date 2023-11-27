@@ -5,7 +5,7 @@ import './futureRes.css';
 import { format } from 'date-fns';
 
 const FutureRes = (props) => {
-  const { jwtToken, idToken, userDetails } = props;
+  const { jwtToken,  userDetails , csrfToken } = props;
   const [reservations, setReservations] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const email = userDetails.email;
