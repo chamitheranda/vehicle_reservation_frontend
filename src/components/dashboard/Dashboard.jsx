@@ -2,9 +2,8 @@ import React from 'react';
 import './dashboard.css';
 
 function Dashboard(props) {
-  const { toggleForm, idToken, jwtToken, toggleRes, toggleFutureRes, userDetails } = props;
+  const { toggleForm, toggleRes, toggleFutureRes, userDetails } = props;
   const name = userDetails.name;
-  console.log("name",name)
   return (
     <div className="dashboard">
       <p className="dashboard-header">Welcome  {name} !</p>
@@ -17,4 +16,5 @@ function Dashboard(props) {
   );
 }
 
+  
 export default Dashboard;
