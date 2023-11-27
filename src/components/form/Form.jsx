@@ -6,8 +6,6 @@ import DOMPurify from 'dompurify';
 const validateFormData = (formData) => {
   const errors = {};
 
-  // Your validation logic here
-  // Example: Check if required fields are filled
   if (!formData.reservationDate) {
     errors.reservationDate = 'Date is required.';
   }
@@ -22,7 +20,7 @@ const validateFormData = (formData) => {
 };
 
 function Form(props) {
-  const { jwtToken, idToken, userDetails } = props;
+  const { jwtToken, idToken, userDetails , csrfToken} = props;
   const [formData, setFormData] = useState({
     reservationDate: '',
     preferredTime: '10',
@@ -32,6 +30,9 @@ function Form(props) {
     message: '',
   });
 
+  function refreshBrowser() {
+    window.location.reload();
+  }
   const [errors, setErrors] = useState({});
 
   const handleInputChange = (e) => {
@@ -64,6 +65,7 @@ function Form(props) {
       userName: name,
       email: email,
       number: number,
+      X_CSRF_TOKEN: csrfToken
     });
   };
 
@@ -74,11 +76,9 @@ function Form(props) {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    // Perform form validation
     const newErrors = validateFormData(formData);
     setErrors(newErrors);
 
-    // If there are errors, return without submitting the form
     if (Object.keys(newErrors).length > 0) {
       return;
     }
@@ -91,15 +91,27 @@ function Form(props) {
           headers: {
             Authorization: `Bearer ${jwtToken}`,
             'Content-Type': 'application/json',
+            'XCSRFTOKEN': csrfToken
           },
         }
       );
 
       if (response.status === 201) {
-        alert('Reservation success !!');
+        window.alert('Reservation success !!');
+        setTimeout(() => {
+          refreshBrowser();
+        }, 500);
+      } else if (response.status === 208) {
+        window.alert('Reservation already reported !!');
+        setTimeout(() => {
+          refreshBrowser();
+        }, 500);
       } else {
         alert('Reservation failed!');
       }
+      
+
+      
 
       console.log('Server Response:', response.data);
     } catch (error) {
