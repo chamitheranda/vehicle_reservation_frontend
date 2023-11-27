@@ -4,7 +4,7 @@ import './reservationList.css';
 import { format } from 'date-fns'; // Import the date-fns library for date formatting
 
 const ReservationList = (props) => {
-  const { jwtToken, idToken, userDetails } = props;
+  const { jwtToken, idToken, userDetails , csrfToken } = props;
   const [reservations, setReservations] = useState([]);
   const [isLoading, setIsLoading] = useState(true); // State to track loading status
   const email = userDetails.email;
