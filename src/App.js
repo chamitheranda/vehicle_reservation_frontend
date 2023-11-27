@@ -11,8 +11,8 @@ const App = () => {
   return (
     <AuthProvider
       config={{
-        clientID: //replace with your clientID,
-        baseUrl:  //replace with your baseURL,
+        clientID: '1QtNSlVCszLaL2701bpo9S_f_sIa',
+        baseUrl: 'https://api.asgardeo.io/t/orgueejs',
         signInRedirectURL: window.location.origin,
         signOutRedirectURL: window.location.origin,
         scope: ['openid', 'profile'],
@@ -121,14 +121,10 @@ const AsgardeoAppContent = () => {
     }
   }, []);
 
-
   useEffect(() => {
-    console.log("mount 2 useEffect");
     const fetchData = async () => {
-      console.log("inside fetchData()");
       try {
-        if (csrfToken === null && state.isAuthenticated) { // This condition is commented out as it seems unnecessary
-          console.log("inside the csrf logic");
+        if (csrfToken === null && state.isAuthenticated) { 
           const response = await fetch('http://localhost:8080/api/v1/csrf/get-csrf', {
             method: 'GET',
             headers: {
@@ -138,16 +134,12 @@ const AsgardeoAppContent = () => {
             },
           });
           
-          console.log("get csrf token");
-
           if (response.ok) {
             const token3 = await response.json();
             const data = token3.token;
             setCsrfToken(data);
             setJwtToken(jwtToken);
             setIdToken(idToken);
-            console.log("csrf token === "+data);
-            console.log(response);
           } else {
             console.error('Failed to fetch CSRF token:', response.status);
           }
@@ -163,14 +155,12 @@ const AsgardeoAppContent = () => {
       fetchData()
     }
   
-  }, [csrfToken  ]); // Include the necessary dependencies
+  }, [csrfToken  ]); 
 
   useEffect(() => {
-    console.log("mount 1 useEffect");
     const fetchUserDetails = async () => {
 
       if (userDetails === null && jwtToken !== null ) {
-        console.log("inside the condition");
         try {
           const response = await axios.get('https://api.asgardeo.io/t/orgueejs/oauth2/userinfo', {
             headers: {
@@ -180,11 +170,9 @@ const AsgardeoAppContent = () => {
   
           const userDetails = response.data;
           setUserDetails(userDetails);
-          console.log("get user information ");
 
         } catch (error) {
           console.error('Error fetching user details:', error);
-          console.log('Response Data:', error.response.data);
         }
       } 
     };
@@ -195,51 +183,33 @@ const AsgardeoAppContent = () => {
   }, [jwtToken ]);
   
   useEffect(() => {
-    console.log("mount 3 useEffect");
     if (state.isAuthenticated && jwtToken === null) {
       getAccessToken().then((jwtToken) => {
         getIDToken().then((idToken) => {
           Cookies.set('jwtTokenCookie', jwtToken, {
             expires: new Date(idToken.exp * 1000),
-            // httpOnly: true,
+            httpOnly: true,
             secure: true,
           });
           Cookies.set('idTokenCookie', idToken, {
             expires: new Date(idToken.exp * 1000),
-            // httpOnly: true,
+            httpOnly: true,
             secure: true,
           });
           Cookies.set('csrfTokenCookie', csrfToken, {
             expires: new Date(idToken.exp * 1000),
-            // httpOnly: true,
+            httpOnly: true,
             secure: true,
           });
          
-
-
-
           setJwtToken(jwtToken);
           setIdToken(idToken);
-          // setCsrfToken(data);
           checkTokenExpiration();
-          console.log("jwt token = "+ Cookies.get("jwtTokenCookie"));
-          console.log("id token ="+Cookies.get("idTokenCookie"));
-          console.log("csrf token = "+Cookies.get("csrfTokenCookie"));
-          console.log("csrf token = " + csrfToken)
+          
         });
       });
-      // if (state.isAuthenticated && jwtToken) {
-      //     fetchUserDetails(jwtToken);
-      // }
-      // fetchData();
-      
-      
     }
   }, [state.isAuthenticated, getAccessToken, csrfToken]);
-
-
-
-  
 
   const handleSignOutClick = () => {
     if (state.isAuthenticated) {
@@ -266,7 +236,6 @@ const AsgardeoAppContent = () => {
       signIn();
     }
   };
-
 
   return (
     <>
