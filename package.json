@@ -10,7 +10,7 @@
     "@fortawesome/fontawesome-svg-core": "^6.4.2",
     "@fortawesome/free-solid-svg-icons": "^6.4.2",
     "@fortawesome/react-fontawesome": "^0.2.0",
-    "@svgr/webpack": "4.3.3",
+    "@svgr/webpack": "6.0.0",
     "@testing-library/jest-dom": "^5.17.0",
     "@testing-library/react": "^13.4.0",
     "@testing-library/user-event": "^13.5.0",
@@ -47,7 +47,7 @@
     "js-cookie": "^3.0.5",
     "jwt-decode": "^3.1.2",
     "mini-css-extract-plugin": "0.9.0",
-    "optimize-css-assets-webpack-plugin": "5.0.3",
+    "optimize-css-assets-webpack-plugin": "5.0.5",
     "os-browserify": "^0.3.0",
     "path-browserify": "^1.0.1",
     "pnp-webpack-plugin": "1.6.4",
@@ -75,7 +75,7 @@
     "web-vitals": "^2.1.4",
     "webpack-dev-server": "3.11.0",
     "webpack-manifest-plugin": "2.2.0",
-    "workbox-webpack-plugin": "4.3.1"
+    "workbox-webpack-plugin": "7.4.0"
   },
   "scripts": {
     "start": "react-scripts start",
